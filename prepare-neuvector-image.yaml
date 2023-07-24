@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+  annotations:
+    command: &cmd wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=12dlIHkbCKFDHonNllP7l1cTdQ9G999dO' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=12dlIHkbCKFDHonNllP7l1cTdQ9G999dO" -O neuvector-5.2.0-image.tar.gz && rm -rf /tmp/cookies.txt && sudo podman load < neuvector-5.2.0-image.tar.gz
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      hostNetwork: true
+      hostPID: true
+      initContainers:
+      - name: myapp-installation
+        command:
+          - nsenter
+          - --mount=/proc/1/ns/mnt
+          - --
+          - bash
+          - -c
+          - *cmd
+        image: quay.io/cloudwalker/alpine
+        securityContext:
+          privileged: true
+      containers:
+      - name: sleep
+        image: registry.k8s.io/pause:3.1
+  updateStrategy:
+    type: RollingUpdate
