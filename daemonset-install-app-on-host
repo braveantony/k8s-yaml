@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+  annotations:
+    command: &cmd sudo podman load <
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      hostNetwork: true
+      hostPID: true
+      initContainers:
+      - name: myapp-installation
+        command:
+          - nsenter
+          - --mount=/proc/1/ns/mnt
+          - --
+          - bash
+          - -c
+          - *cmd
+        image: quay.io/cloudwalker/alpine
+        securityContext:
+          privileged: true
+      containers:
+      - name: sleep
+        image: registry.k8s.io/pause:3.1
+  updateStrategy:
+    type: RollingUpdate
