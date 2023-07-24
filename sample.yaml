@@ -5,7 +5,7 @@ metadata:
   labels:
     app: myapp
   annotations:
-    command: &cmd sudo podman load <
+    command: &cmd sudo podman load < image.tar.gz
 spec:
   selector:
     matchLabels:
