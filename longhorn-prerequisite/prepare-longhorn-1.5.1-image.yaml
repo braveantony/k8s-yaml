@@ -5,7 +5,7 @@ metadata:
   labels:
     app: prepare-longhorn-image
   annotations:
-    command: &cmd wget -q --progress=bar --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1YGXE_U5FdhvE2TdUHZBdt3QvGG391T58' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1YGXE_U5FdhvE2TdUHZBdt3QvGG391T58" -O longhorn-1.5.1-image.tar.gz && rm -rf /tmp/cookies.txt && podman load < longhorn-1.5.1-image.tar.gz && rm longhorn-1.5.1-image.tar.gz
+    command: &cmd wget -q --progress=bar --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1SSeNAAONeQ9T2fI6dfeLp7R2iGhDq3vb' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1SSeNAAONeQ9T2fI6dfeLp7R2iGhDq3vb" -O longhorn-1.5.1-image.tar.gz && rm -rf /tmp/cookies.txt && podman load < longhorn-1.5.1-image.tar.gz && rm longhorn-1.5.1-image.tar.gz
 spec:
   selector:
     matchLabels:
