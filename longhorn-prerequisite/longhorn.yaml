@@ -3958,7 +3958,7 @@ metadata:
   name: longhorn-frontend
   namespace: longhorn-system
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: longhorn-ui
   ports:
