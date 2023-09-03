@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: install-canal-image
+  labels:
+    app: install-canal-image
+  annotations:
+    command: &cmd wget -q --progress=bar --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1OEenBqnRdEHvqYJTVFiorRoNluBoi_I1' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1OEenBqnRdEHvqYJTVFiorRoNluBoi_I1" -O canal-image.tar.gz && rm -rf /tmp/cookies.txt && podman load < canal-image.tar.gz && rm canal-image.tar.gz 
+spec:
+  selector:
+    matchLabels:
+      app: install-canal-image
+  template:
+    metadata:
+      labels:
+        app: install-canal-image
+    spec:
+      hostNetwork: true
+      hostPID: true
+      initContainers:
+      - name: install-canal-image
+        command:
+          - nsenter
+          - --mount=/proc/1/ns/mnt
+          - --
+          - bash
+          - -c
+          - *cmd
+        image: quay.io/cloudwalker/alpine
+        securityContext:
+          privileged: true
+      containers:
+      - name: sleep
+        image: registry.k8s.io/pause:3.9
+  updateStrategy:
+    type: RollingUpdate
